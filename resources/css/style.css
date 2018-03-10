@@ -67,6 +67,7 @@ body {
     font-family: "Lato",serif;
     font-weight: 100;
     position: absolute;
+    text-align: center;
     left: 50%;
     top: 50%;
     transform: translate(-50%);
@@ -104,17 +105,21 @@ body {
 .entry-header{
     background-color: var(--main-color);
     padding: 10px 15px;
-    height: 60px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
+    font-family: "Lato",serif;
 }
 
 .entry-header h3{
     float: left;
+    font-weight: 300;
 }
 
-.entry-header p{
+.entry-date{
     float: right;
+}
+
+.entry-author{
 }
 
 .entry-body{
