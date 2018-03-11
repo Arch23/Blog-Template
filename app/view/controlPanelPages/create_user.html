@@ -1,11 +1,11 @@
 <!-- Create new user content -->
 <h2>Create new user: </h2>
-<form action="" class="create-user">
-    <input type="text" name="" id="name" placeholder="Name">
-    <input type="text" name="" id="username" placeholder="Username">
-    <input type="password" name="" id="password" placeholder="Password">
-    <input type="password" name="" id="password-confirm" placeholder="Confirm password">
+<form onsubmit="return createUser()" class="create-user">
+    <input type="text" name="" id="name" placeholder="Name" required>
+    <input type="text" name="" id="username" placeholder="Username" required>
+    <input type="password" name="" id="password" placeholder="Password" required>
+    <input type="password" name="" id="password-confirm" placeholder="Confirm password" required>
     <label>
         <input type="checkbox" name="" id="isAdmin">&nbspAdmin?</label>
-    <input class="btn btn-big" type="button" value="Create">
+    <input class="btn btn-big" type="submit" value="Create">
 </form>

@@ -2,9 +2,10 @@ $(document).ready(function () {
 
     setUpAjax();
 
+    
+
     function setUpAjax() {
         var links = document.querySelectorAll(".config-menu");
-        console.log(links);
         links.forEach(function (link) {
             link.addEventListener("click", function () {
                 switch (this.id) {
@@ -31,6 +32,13 @@ $(document).ready(function () {
                             });
                         });
                         break;
+                    case "edit-users":
+                    $(".content").fadeOut("fast", function () {
+                        $(".content").load("./controlPanelPages/edit_users.html", function () {
+                            $(".content").fadeIn("fast");
+                        });
+                    });
+                        break
                     case "logoff":
 
                         break;
@@ -57,3 +65,24 @@ $(document).ready(function () {
     }
 
 });
+
+function createUser(){
+    var user = {
+        name: document.getElementById("name").value,
+        unsername: document.getElementById("username").value,
+        password: document.getElementById("password").value,
+        passwordConfirm: document.getElementById("password-confirm").value,
+        isAdmin: document.getElementById("isAdmin").value
+    }
+
+    console.log(user);
+
+    if(user.password!==user.passwordConfirm){
+        alert("passwords do not match!");
+        return;
+    }
+
+    $.post("",user,function(data,status){
+
+    });
+}

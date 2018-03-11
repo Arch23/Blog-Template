@@ -229,16 +229,14 @@ input[type='file'] {
     width: 100%;
     text-align: center;
     display: grid;
-    grid-template-columns: 40% 20% 15% 8% 8% ;
-    grid-column-gap: 5px;
+    grid-template-columns: 40% 20% 15% 12.5% 12.5% ;
     margin-bottom: 25px;
 }
 
-.titles{
-    text-align: left;
+.table-title{
 }
 
-.titles label:after {
+.table-title label:after {
     display: block;
     height: 4px;
     background-color: var(--button-color);
@@ -261,4 +259,16 @@ input[type='file'] {
 
 .row a:focus{
     outline: none;
+}
+
+/* 
+    Delete users
+*/
+
+.user-grid-layout{
+    display: grid;
+    grid-template-columns: 40% 20% 20% 10% 10%;
+    margin-bottom: 25px;
+    width: 100%;
+    text-align: center;
 }
