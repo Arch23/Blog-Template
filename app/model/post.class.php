@@ -16,6 +16,18 @@ class Post {
     return($data);
   }
 
+  public function getPost($db, $title, $author, $date){
+    $stmt = $db->prepare("SELECT text FROM `Post` WHERE title = :title AND User_name = :author AND date = :date");
+    $stmt->bindParam(":title", $title, PDO::PARAM_STR);
+    $stmt->bindParam(":author", $author, PDO::PARAM_STR);
+    $stmt->bindParam(":date", $date);
+
+    $stmt->execute();
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return($data);
+  }
+
   /* Getters */
   public function getDate(){
     return($this->date);
