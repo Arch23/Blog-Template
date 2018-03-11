@@ -74,7 +74,6 @@ function createUser(){
         isAdmin = document.getElementById("isAdmin").value;
     
 
-    console.log(user);
 
     if(password!==passwordConfirm){
         alert("passwords do not match!");
@@ -83,12 +82,11 @@ function createUser(){
 
     $.post("../controller/controlPanelController.php",{
         name: name,
-        unsername: unsername,
+        username: unsername,
         password: password,
-        passwordConfirm: passwordConfirm,
         isAdmin: isAdmin,
         tag: "createUser"
     },function(data,status){
-
+        console.log(data);
     });
 }

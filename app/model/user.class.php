@@ -6,12 +6,19 @@ class User{
   private $password;
   private $privilege;
 
-  public function createNewUser(){
+  public function checkDuplicatedNick($db){
+    $stmt = $db->prepare("SELECT * FROM `User` WHERE `nickname`=:nick");
+    $stmt->bindParam(":nick",$this->nickname);
+    $stmt->execute();
+    return($stmt->rowCount()!==0);    
+  }
+
+  public function createNewUser($db){
     $stmt = $db->prepare("INSERT INTO `User`(`name`, `nickname`, `password`, `privilege`) VALUES (:name,:nick,:password,:privilege)");
-    $stmt->bindParam(":name",$name);
-    $stmt->bindParam(":nick",$nickname);
-    $stmt->bindParam(":password",$password);
-    $stmt->bindParam(":privilege",$privilege);
+    $stmt->bindParam(":name",$this->name);
+    $stmt->bindParam(":nick",$this->nickname);
+    $stmt->bindParam(":password",$this->password);
+    $stmt->bindParam(":privilege",$this->privilege);
     return($stmt->execute());
   }
 
