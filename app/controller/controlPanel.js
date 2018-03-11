@@ -67,22 +67,28 @@ $(document).ready(function () {
 });
 
 function createUser(){
-    var user = {
-        name: document.getElementById("name").value,
-        unsername: document.getElementById("username").value,
-        password: document.getElementById("password").value,
-        passwordConfirm: document.getElementById("password-confirm").value,
-        isAdmin: document.getElementById("isAdmin").value
-    }
+        var name = document.getElementById("name").value,
+        unsername = document.getElementById("username").value,
+        password = document.getElementById("password").value,
+        passwordConfirm =  document.getElementById("password-confirm").value,
+        isAdmin = document.getElementById("isAdmin").value;
+    
 
     console.log(user);
 
-    if(user.password!==user.passwordConfirm){
+    if(password!==passwordConfirm){
         alert("passwords do not match!");
         return;
     }
 
-    $.post("",user,function(data,status){
+    $.post("../controller/controlPanelController.php",{
+        name: name,
+        unsername: unsername,
+        password: password,
+        passwordConfirm: passwordConfirm,
+        isAdmin: isAdmin,
+        tag: "createUser"
+    },function(data,status){
 
     });
 }
