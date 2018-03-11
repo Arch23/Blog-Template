@@ -22,6 +22,20 @@ class User{
     return($stmt->execute());
   }
 
+  public function getAllUsers($db){
+    $stmt = $db->prepare("SELECT `name`, `nickname` FROM `User` ");
+    $stmt->execute();
+    $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return(json_encode($res));
+  }
+
+  public function deleteUser($db){
+    $stmt = $db->prepare("DELETE FROM `User` WHERE `name`=':name' AND `nickname`=':nick'");
+    $stmt->bindParam(":name",$this->name);
+    $stmt->bindParam(":nick",$this->nick);
+    return($stmt->execute());
+  }
+
   /* Getters */
   public function getNickname(){
     return($this->nickname);

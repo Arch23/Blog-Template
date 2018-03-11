@@ -2,8 +2,6 @@
 require_once "../config.php";
 require_once "../model/user.class.php";
 
-print_r($_POST);
-
 switch($_POST["tag"]){
     case "createUser":
         $user = new User;
@@ -17,8 +15,12 @@ switch($_POST["tag"]){
             return;
         }
 
-        echo($user->createNewUser($db));
+        echo($user->createNewUser($db)?"ok":"not_ok");
 
+        break;
+    case "getAllUsers":
+        $user = new User;
+        echo($user->getAllUsers($db));
         break;
 }
 
