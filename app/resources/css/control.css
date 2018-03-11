@@ -198,7 +198,7 @@ h2 {
 }
 
 /* Esconde o input */
-input[type='file'] {
+#image {
     display: none;
 }
 

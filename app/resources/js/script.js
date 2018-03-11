@@ -30,7 +30,7 @@ function loadTextEditor() {
         ],
         plugins: {
             upload: {
-                serverPath: 'https://api.imgur.com/3/image',
+                serverPath: '',
                 fileFieldName: 'image',
                 headers: {
                     'Authorization': 'Client-ID 9e57cb1c4791cea'
