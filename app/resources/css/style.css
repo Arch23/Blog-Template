@@ -55,6 +55,9 @@ body {
     overflow: hidden;
 }
 
+
+
+
 .hero{
     width: 100vw;
     height: 70vh;
@@ -70,7 +73,7 @@ body {
     text-align: center;
     left: 50%;
     top: 50%;
-    transform: translate(-50%);
+    transform: translateX(-50%) translateY(-50%);
     color: #fff;
     border-radius: 20px;
     padding: 10px;
