@@ -5,3 +5,5 @@ function createLoader(parentDiv){
 function deleteLoader(){
     $(".loader").remove();
 }
+
+/* Controlador das imagens */

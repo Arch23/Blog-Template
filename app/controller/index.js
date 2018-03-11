@@ -1,7 +1,5 @@
 $(document).ready(function () {
-  $.post("app/controller/indexController.php", {
-      tag: 'loadIndex'
-    },
+  $.post("app/controller/indexController.php",
     function (data) {
       loadPosts(JSON.parse(data));
       addEvent();
@@ -19,7 +17,7 @@ function loadPosts(data) {
         date: e.date,
         author: e.User_name,
         text: e.text.substring(0, 300) + "..."
-      }].map(EntryWithoutImage).join(''));
+      }].map(entryWithoutImage).join(''));
 
     } else { // Have a main image
 
@@ -31,7 +29,7 @@ function loadPosts(data) {
         text: e.text.substring(0, 300) + "...",
         imgUrl: e.img_url,
         imgAlt: e.img_alt
-      }].map(EntryWithImage).join(''));
+      }].map(entryWithImage).join(''));
 
     }
     num++;
@@ -40,12 +38,11 @@ function loadPosts(data) {
 
 function addEvent() {
   var entries = document.querySelectorAll(".entry");
-
   entries.forEach(element => {
     element.addEventListener("click", function () {
-      var title = document.querySelector("#" + element.id + " h3").textContent;
-      var date = document.querySelector("#" + element.id + " p.entry-date").textContent;
-      var author = document.querySelector("#" + element.id + " p.entry-author").textContent;
+      const title = document.querySelector("#" + element.id + " h3").textContent;
+      const date = document.querySelector("#" + element.id + " p.entry-date").textContent;
+      const author = document.querySelector("#" + element.id + " p.entry-author").textContent;
 
       loadPost(title, date, author);
     });
@@ -53,22 +50,32 @@ function addEvent() {
 }
 
 function loadPost(title, date, author) {
+
+  var post = {
+    title: title,
+    date: date,
+    author: author
+  };
+  
+  post = JSON.stringify(post);
+
+  window.location.href = "app/view/news.html?" + encodeURI(post);
+/* 
   $.post("app/controller/indexController.php", {
     tag: 'loadPost',
     title: title,
     author: author,
     date: date
   }, function (data) {
-    openPost(JSON.parse(data));
-  });
-}
-
-function openPost(data) {
-
+    data = JSON.parse(data);
+    if (data.text !== null) {
+      var post;
+    }
+  }); */
 }
 
 /*  HTML post templates */
-const EntryWithImage = ({
+const entryWithImage = ({
   entry,
   title,
   date,
@@ -93,7 +100,7 @@ const EntryWithImage = ({
 </div>
 </div>`;
 
-const EntryWithoutImage = ({
+const entryWithoutImage = ({
   entry,
   title,
   date,

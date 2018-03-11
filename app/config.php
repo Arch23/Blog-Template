@@ -1,6 +1,9 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
 
+define("PROJECT_ROOT", dirname(dirname(__FILE__)));
+define("IMGS_FOLDER", PROJECT_ROOT."/app/images/");
+
 define("DBHOST", "localhost");
 define("DBUSER", "root");
 define("DBPASS", "");

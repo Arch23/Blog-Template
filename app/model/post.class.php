@@ -17,7 +17,7 @@ class Post {
   }
 
   public function getPost($db, $title, $author, $date){
-    $stmt = $db->prepare("SELECT text FROM `Post` WHERE title = :title AND User_name = :author AND date = :date");
+    $stmt = $db->prepare("SELECT * FROM `Post` WHERE title = :title AND User_name = :author AND date = :date");
     $stmt->bindParam(":title", $title, PDO::PARAM_STR);
     $stmt->bindParam(":author", $author, PDO::PARAM_STR);
     $stmt->bindParam(":date", $date);
