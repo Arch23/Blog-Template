@@ -9,16 +9,27 @@ $(document).ready(function () {
             link.addEventListener("click", function () {
                 switch (this.id) {
                     case "create-user":
-                        $(".content").load("./controlPanelPages/create_user");
+                        $(".content").fadeOut("fast", function () {
+                            $(".content").load("./controlPanelPages/create_user.html", function () {
+                                $(".content").fadeIn("fast");
+                            });
+                        });
                         break;
                     case "create-post":
-                        $(".content").load("./controlPanelPages/create_post",function(){
-                            $("#text-area").trumbowyg();
-                        setFileUpdateEvent();
+                        $(".content").fadeOut("fast", function () {
+                            $(".content").load("./controlPanelPages/create_post.html", function () {
+                                $("#text-area").trumbowyg();
+                                setFileUpdateEvent();
+                                $(".content").fadeIn("fast");
+                            });
                         });
                         break;
                     case "list-posts":
-
+                        $(".content").fadeOut("fast", function () {
+                            $(".content").load("./controlPanelPages/list_posts.html", function () {
+                                $(".content").fadeIn("fast");
+                            });
+                        });
                         break;
                     case "logoff":
 
