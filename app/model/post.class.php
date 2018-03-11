@@ -12,9 +12,7 @@ class Post {
     $stmt = $db->prepare("SELECT * FROM `Post`");
 
     $stmt->execute();
-
-    $data = $stmt->fetchAll();
-
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);  // PDO::FETCH_ASSOC "destroy" the first return "num => content"
     return($data);
   }
 
