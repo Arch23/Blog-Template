@@ -30,13 +30,13 @@ function loadTextEditor() {
         ],
         plugins: {
             upload: {
-                serverPath: 'https://api.imgur.com/3/image',
-                fileFieldName: 'image',
+                //serverPath: 'https://api.imgur.com/3/image',
+                fileFieldName: 'dataImage',
                 headers: {
                     'Authorization': 'Client-ID 9e57cb1c4791cea'
                 },
-                urlPropertyName: 'data.link'
-                //serverPath: '../controller/uploadController.php'
+                urlPropertyName: 'data.link',
+                serverPath: '../controller/uploadController.php'
             }
         }
     });

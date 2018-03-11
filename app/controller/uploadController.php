@@ -25,6 +25,21 @@ print_r($_FILES); */
 
 $targetDir = IMGS_FOLDER;
 
+$totalImgs = new FilesystemIterator($targetDir, FilesystemIterator::SKIP_DOTS);
+$numImgs = iterator_count($totalImgs);
+
+print_r($_FILES);
+
+foreach($_FILES["file"] as $key=>$value){
+  echo "$key => $value \n";
+  if($key == "name"){
+    $path_parts = pathinfo('test.png');
+  }
+}
+
+move_uploaded_file($_FILES["file"]["tmp_name"], IMGS_FOLDER."/image-".$numImgs.".".$path_parts["extension"]);
+
+/* 
 // Detect if it is an AJAX request
 if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
     $file = array_shift($_FILES);
@@ -47,4 +62,4 @@ if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         'formData' => $_POST
     );
 }
-echo json_encode($data);
+echo json_encode($data); */
