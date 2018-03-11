@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     setUpAjax();
 
-    
+
 
     function setUpAjax() {
         var links = document.querySelectorAll(".config-menu");
@@ -19,7 +19,7 @@ $(document).ready(function () {
                     case "create-post":
                         $(".content").fadeOut("fast", function () {
                             $(".content").load("./controlPanelPages/create_post.html", function () {
-                                $("#text-area").trumbowyg();
+                                /* $("#text-area").trumbowyg(); */
                                 setFileUpdateEvent();
                                 $(".content").fadeIn("fast");
                             });
@@ -33,11 +33,11 @@ $(document).ready(function () {
                         });
                         break;
                     case "edit-users":
-                    $(".content").fadeOut("fast", function () {
-                        $(".content").load("./controlPanelPages/edit_users.html", function () {
-                            $(".content").fadeIn("fast");
+                        $(".content").fadeOut("fast", function () {
+                            $(".content").load("./controlPanelPages/edit_users.html", function () {
+                                $(".content").fadeIn("fast");
+                            });
                         });
-                    });
                         break
                     case "logoff":
 
@@ -62,31 +62,33 @@ $(document).ready(function () {
 
             fileName.textContent = nameOnly;
         });
+
+        loadTextEditor();
     }
 
 });
 
-function createUser(){
-        var name = document.getElementById("name").value,
+function createUser() {
+    var name = document.getElementById("name").value,
         unsername = document.getElementById("username").value,
         password = document.getElementById("password").value,
-        passwordConfirm =  document.getElementById("password-confirm").value,
+        passwordConfirm = document.getElementById("password-confirm").value,
         isAdmin = document.getElementById("isAdmin").value;
-    
 
 
-    if(password!==passwordConfirm){
+
+    if (password !== passwordConfirm) {
         alert("passwords do not match!");
         return;
     }
 
-    $.post("../controller/controlPanelController.php",{
+    $.post("../controller/controlPanelController.php", {
         name: name,
         username: unsername,
         password: password,
         isAdmin: isAdmin,
         tag: "createUser"
-    },function(data,status){
+    }, function (data, status) {
         console.log(data);
     });
 }
