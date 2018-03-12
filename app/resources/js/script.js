@@ -61,12 +61,13 @@ function loadTextEditor() {
         ],
         plugins: {
             upload: {
-                serverPath: 'https://api.imgur.com/3/image',
-                //serverPath: '../controller/uploadController.php',
+                //serverPath: 'https://api.imgur.com/3/image',
+                //serverPath: 'http://localhost/Blog-Template/app/controller/uploadController.php',
+                serverPath: '../controller/uploadController.php',
                 fileFieldName: 'dataImage',
-                headers: {
+                /* headers: {
                     'Authorization': 'Client-ID 9e57cb1c4791cea'
-                },
+                }, */
                 urlPropertyName: 'data.link'
             }
         }

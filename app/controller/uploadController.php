@@ -2,7 +2,7 @@
 
 require_once "../config.php";
 
-$targetDir = IMGS_FOLDER;
+/* $targetDir = IMGS_FOLDER;
 
 $totalImgs = new FilesystemIterator($targetDir, FilesystemIterator::SKIP_DOTS);
 $numImgs = iterator_count($totalImgs);
@@ -19,14 +19,22 @@ foreach($_FILES["file"] as $key=>$value){
 move_uploaded_file($_FILES["file"]["tmp_name"], 
 IMGS_FOLDER."/image-".$numImgs.".".$path_parts["extension"]);
 
-
+ */
 /* 
+$file = dirname($_SERVER['PHP_SELF']) . str_replace('./', '/', UPLOADDIR) . $file['name'];
+$file = str_replace("/trumfolder/plugins/upload/home/mysite/public_html", "", $file); 
+*/
+/**
+ * Upload directory
+ * 
+ */
 define("UPLOADDIR", IMGS_FOLDER);
 // Detect if it is an AJAX request
 if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
     $file = array_shift($_FILES);
     if(move_uploaded_file($file['tmp_name'], UPLOADDIR . basename($file['name']))) {
         $file = dirname($_SERVER['PHP_SELF']) . str_replace('./', '/', UPLOADDIR) . $file['name'];
+        $file = str_replace("/Blog-Template/app/controller", "", $file); 
         $data = array(
             'message' => 'uploadSuccess',
             'file'    => $file,
@@ -43,5 +51,4 @@ if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         'formData' => $_POST
     );
 }
-echo json_encode($data); 
-*/
+echo json_encode($data);
