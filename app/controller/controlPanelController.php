@@ -7,7 +7,7 @@ switch($_POST["tag"]){
         $user = new User;
         $user->setName($_POST["name"]);
         $user->setNickname($_POST["username"]);
-        $user->setPassword($_POST["password"]);
+        $user->setPassword(password_hash($_POST["password"],PASSWORD_DEFAULT));
         $user->setPrivilege($_POST["isAdmin"]);
         
         if($user->checkDuplicatedNick($db)){
@@ -21,6 +21,30 @@ switch($_POST["tag"]){
     case "getAllUsers":
         $user = new User;
         echo($user->getAllUsers($db));
+        break;
+    case "delete-user":
+        $user = new User;
+        $user->setName($_POST["name"]);
+        $user->setNickname($_POST["nickname"]);
+        echo($user->deleteUser($db)?"ok":"not_ok");
+        break;
+    case "update-user":
+        $user = new User;
+        $user->setName($_POST["name"]);
+        $user->setNickname($_POST["nick"]);
+        if($_POST["passChanged"]){
+            $user->setPassword(password_hash($_POST["password"],PASSWORD_DEFAULT));
+        }else{
+            $user->setPassword($_POST["password"]);
+        }
+        $user->setPrivilege($_POST["isAdmin"]);
+        echo($user->updateUser($db,$_POST["oldName"],$_POST["oldNick"])?"ok":"not_ok");
+        break;
+    case "get-user-data":
+        $user = new User;
+        $user->setName($_POST["name"]);
+        $user->setNickname($_POST["nickname"]);
+        echo($user->getUserData($db));
         break;
 }
 

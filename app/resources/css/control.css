@@ -13,6 +13,10 @@
     -webkit-box-sizing: border-box;
 }
 
+*:focus{
+    outline: none;
+}
+
 a{
     cursor: pointer;
 }
@@ -322,5 +326,32 @@ MODAL
 .close:focus {
     color: #000;
     text-decoration: none;
+    cursor: pointer;
+}
+
+/* 
+    edit user data
+*/
+
+.edit-user-data-grid{
+    margin: 20px auto;
+    width: 80%;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-row-gap: 30px;
+}
+
+.edit-user-data-grid input{
+    text-align: center;
+}
+
+.change-button-grid{
+    margin: 30px auto;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.btn-change{
+    text-align: center;
     cursor: pointer;
 }
