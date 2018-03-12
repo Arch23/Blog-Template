@@ -109,35 +109,6 @@ function getUserData(origin){
     });
 }
 
-
-function setUpModal() {
-    // Get the modal
-    var modal = document.getElementById('myModal');
-
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
-
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
-        modal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-}
-
-function displayModal(text){
-    $(".modal-content p").html(text);
-    document.getElementById('myModal').style.display = "block";
-}
-
 function setFileUpdateEvent() {
     var input = document.getElementById("image"),
         fileName = document.getElementById("file-name");
@@ -173,6 +144,7 @@ function setFileUpdateEvent() {
 }
 
 function createUser() {
+    console.log("WHAAAAAAT");
     var name = document.getElementById("name").value,
         unsername = document.getElementById("username").value,
         password = document.getElementById("password").value,
@@ -184,6 +156,7 @@ function createUser() {
         return;
     }
 
+    console.log("WHAAAAAAT2");
     $.post("../controller/controlPanelController.php", {
         name: name,
         username: unsername,
@@ -200,6 +173,8 @@ function createUser() {
             displayModal("User not created!");
         }
     });
+
+    console.log("WHAAAAAAT3");
 }
 
 function getUsers(){
