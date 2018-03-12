@@ -22,6 +22,15 @@ class User{
     return($stmt->execute());
   }
 
+  public function getUserData($db){
+    $stmt = $db->prepare("SELECT * FROM `User` WHERE `name`=:name AND `nickname`=:nick");
+    $stmt->bindParam(":name",$this->name);
+    $stmt->bindParam(":nick",$this->nickname);
+    $stmt->execute();
+    $res = $stmt->fetch(PDO::FETCH_ASSOC);
+    return(json_encode($res));
+  }
+
   public function getAllUsers($db){
     $stmt = $db->prepare("SELECT `name`, `nickname` FROM `User` ");
     $stmt->execute();
@@ -30,9 +39,20 @@ class User{
   }
 
   public function deleteUser($db){
-    $stmt = $db->prepare("DELETE FROM `User` WHERE `name`=':name' AND `nickname`=':nick'");
+    $stmt = $db->prepare("DELETE FROM `User` WHERE `name`=:name AND `nickname`=:nick");
     $stmt->bindParam(":name",$this->name);
-    $stmt->bindParam(":nick",$this->nick);
+    $stmt->bindParam(":nick",$this->nickname);
+    return($stmt->execute());
+  }
+
+  public function updateUser($db,$oldName,$oldNick){
+    $stmt = $db->prepare("UPDATE `User` SET `name`=:name,`nickname`=:nick,`password`=:password,`privilege`=:privilege WHERE `name`=:oldName AND `nickname`=:oldNick");
+    $stmt->bindParam(":oldName",$oldName);
+    $stmt->bindParam(":oldNick",$oldNick);
+    $stmt->bindParam(":name",$this->name);
+    $stmt->bindParam(":nick",$this->nickname);
+    $stmt->bindParam(":password",$this->password);
+    $stmt->bindParam(":privilege",$this->privilege);
     return($stmt->execute());
   }
 
