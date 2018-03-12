@@ -4,31 +4,33 @@ $(document).ready(function () {
     setUpModal();
 });
 
+var divToLoad = ".content";
+
 function setUpAjax() {
     var links = document.querySelectorAll(".config-menu");
     links.forEach(function (link) {
         link.addEventListener("click", function () {
             switch (this.id) {
                 case "create-user":
-                    $(".content").fadeOut("fast", function () {
-                        $(".content").load("./controlPanelPages/create_user.html", function () {
-                            $(".content").fadeIn("fast");
+                    $(divToLoad).fadeOut("fast", function () {
+                        $(divToLoad).load("./controlPanelPages/create_user.html", function () {
+                            $(divToLoad).fadeIn("fast");
                         });
                     });
                     break;
                 case "create-post":
-                    $(".content").fadeOut("fast", function () {
-                        $(".content").load("./controlPanelPages/create_post.html", function () {
+                    $(divToLoad).fadeOut("fast", function () {
+                        $(divToLoad).load("./controlPanelPages/create_post.html", function () {
                             /* $("#text-area").trumbowyg(); */
                             setFileUpdateEvent();
-                            $(".content").fadeIn("fast");
+                            $(divToLoad).fadeIn("fast");
                         });
                     });
                     break;
                 case "list-posts":
-                    $(".content").fadeOut("fast", function () {
-                        $(".content").load("./controlPanelPages/list_posts.html", function () {
-                            $(".content").fadeIn("fast");
+                    $(divToLoad).fadeOut("fast", function () {
+                        $(divToLoad).load("./controlPanelPages/list_posts.html", function () {
+                            $(divToLoad).fadeIn("fast");
                         });
                     });
                     break;
@@ -44,22 +46,22 @@ function setUpAjax() {
 }
 
 function loadEditUsers(){
-    $(".content").fadeOut("fast", function () {
-        $(".content").load("./controlPanelPages/edit_users.html", function () {
+    $(divToLoad).fadeOut("fast", function () {
+        $(divToLoad).load("./controlPanelPages/edit_users.html", function () {
             getUsers();
-            $(".content").fadeIn("fast");
+            $(divToLoad).fadeIn("fast");
         });
     });
 }
 
 function loadChangeUser(origin){
-    $(".content").fadeOut("fast", function () {
-        $(".content").load("./controlPanelPages/change_data.html", function () {
+    $(divToLoad).fadeOut("fast", function () {
+        $(divToLoad).load("./controlPanelPages/change_data.html", function () {
             getUserData(origin);
             document.getElementById("return").addEventListener("click",function(){
                 loadEditUsers();
             });
-            $(".content").fadeIn("fast");
+            $(divToLoad).fadeIn("fast");
         });
     });
 }
@@ -206,7 +208,7 @@ function getUsers(){
     },function(data,status){
         var res = JSON.parse(data);
         res.forEach(function(e){
-            $(".content").append([{
+            $(divToLoad).append([{
                 name: e.name,
                 username: e.nickname
               }].map(userEntry).join(''));

@@ -36,6 +36,10 @@ body {
     text-rendering: optimizeLegibility;
 }
 
+body{
+    overflow-y: scroll;
+}
+
 .clearfix {
     zoom: 1;
 }
@@ -144,7 +148,6 @@ h2 {
     padding: 20px;
     margin: 10px;
     height: 100%;
-    overflow-y: hidden;
 }
 
 /* 
