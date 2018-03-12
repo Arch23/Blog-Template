@@ -15,12 +15,12 @@ switch($_POST["tag"]){
             return;
         }
 
-        echo($user->createNewUser($db)?"ok":"not_ok");
+        echo($user->createNewUser($db,$_POST["nick"])?"ok":"not_ok");
 
         break;
     case "getAllUsers":
         $user = new User;
-        echo($user->getAllUsers($db));
+        echo($user->getAllUsers($db,$_POST["nick"]));
         break;
     case "delete-user":
         $user = new User;

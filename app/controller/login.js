@@ -4,9 +4,13 @@ function login(){
         nick: username,
         password: password
     },function(data,status){
-        switch(data){
+        data = JSON.parse(data);
+        switch(data.auth){
             case "ok":
-                displayModal("ok");
+                Cookies.set("name",data.name);
+                Cookies.set("nick",data.nick);
+                Cookies.set("privilege",data.privilege);
+                window.location.replace("controlPanel.html");
                 break;
             case "wrong":
                 displayModal("Wrong password!");

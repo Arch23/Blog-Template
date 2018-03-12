@@ -5,13 +5,17 @@ require_once "../model/user.class.php";
 $user = new User;
 $user->setNickname($_POST["nick"]);
 $res = $user->login($db);
+$obj = new stdClass;
+$obj->name = $res["name"];
+$obj->privilege = $res["privilege"];
+$obj->nick = $res["nickname"];
+$obj->auth = "";
 if(empty($res)){
-    echo("not_found");
-    return;
-}
-if(password_verify($_POST["password"],$res["password"])){
-    echo("ok");
+    $obj->auth = "not_found";
+}else if(password_verify($_POST["password"],$res["password"])){
+    $obj->auth = "ok";
 }else{
-    echo("wrong");
+    $obj->auth = "wrong";
 }
+echo(json_encode($obj));
 ?>
