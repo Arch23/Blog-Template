@@ -1,10 +1,17 @@
 $(document).ready(function () {
-
+    isLoggedIn();
+    checkPrivilege();
     setUpAjax();
     setUpModal();
 });
 
 var divToLoad = ".content";
+
+function checkPrivilege(){
+    if(Cookies.get("privilege")==1){
+        $("#options-menu").prepend("<li><a class=\"btn btn-options config-menu\" id=\"create-user\">Create new user</a></li><li><a class=\"btn btn-options config-menu\" id=\"edit-users\">Edit Users</a></li>");
+    }
+}
 
 function setUpAjax() {
     var links = document.querySelectorAll(".config-menu");
@@ -38,14 +45,23 @@ function setUpAjax() {
                     loadEditUsers();
                     break
                 case "logoff":
-
+                    logoff();
                     break;
             }
         });
     });
 }
 
-function loadEditUsers(){
+function logoff(){
+    Cookies.remove("name");
+    Cookies.remove("nick");
+    Cookies.remove("privilege");
+    window.location.href = "loginCP.html";
+    // window.location.replace("loginCP.html");
+
+}
+
+function loadEditUsers() {
     $(divToLoad).fadeOut("fast", function () {
         $(divToLoad).load("./controlPanelPages/edit_users.html", function () {
             getUsers();
@@ -54,11 +70,11 @@ function loadEditUsers(){
     });
 }
 
-function loadChangeUser(origin){
+function loadChangeUser(origin) {
     $(divToLoad).fadeOut("fast", function () {
         $(divToLoad).load("./controlPanelPages/change_data.html", function () {
             getUserData(origin);
-            document.getElementById("return").addEventListener("click",function(){
+            document.getElementById("return").addEventListener("click", function () {
                 loadEditUsers();
             });
             $(divToLoad).fadeIn("fast");
@@ -66,28 +82,30 @@ function loadChangeUser(origin){
     });
 }
 
-function getUserData(origin){
+function getUserData(origin) {
     var nameUser = origin.id.split("-");
-    $.post("../controller/controlPanelController.php",{
+    $.post("../controller/controlPanelController.php", {
         name: nameUser[0],
         nickname: nameUser[1],
         tag: "get-user-data"
-    },function(data,status){
+    }, function (data, status) {
         var user = JSON.parse(data);
         document.getElementById("new-name").value = user.name;
         document.getElementById("new-username").value = user.nickname;
-        document.getElementById("new-isAdmin").checked = user.privilege==1?true:false;
-        document.getElementById("change").addEventListener("click",function(){
-            var passChanged,password, name=document.getElementById("new-name").value, nick=document.getElementById("new-username").value, isAdmin=(document.getElementById("new-isAdmin").checked===true?1:0);
-            if(document.getElementById("new-password").value===""){
+        document.getElementById("new-isAdmin").checked = user.privilege == 1 ? true : false;
+        document.getElementById("change").addEventListener("click", function () {
+            var passChanged, password, name = document.getElementById("new-name").value,
+                nick = document.getElementById("new-username").value,
+                isAdmin = (document.getElementById("new-isAdmin").checked === true ? 1 : 0);
+            if (document.getElementById("new-password").value === "") {
                 passChanged = 0;
                 password = user.password;
-            }else{
+            } else {
                 passChanged = 1;
                 password = document.getElementById("new-password").value;
             }
 
-            $.post("../controller/controlPanelController.php",{
+            $.post("../controller/controlPanelController.php", {
                 name: name,
                 nick: nick,
                 isAdmin: isAdmin,
@@ -96,12 +114,12 @@ function getUserData(origin){
                 oldNick: user.nickname,
                 passChanged: passChanged,
                 tag: "update-user"
-            },function(data,status){
+            }, function (data, status) {
                 console.log(data);
-                if(data==="ok"){
+                if (data === "ok") {
                     displayModal("User data changed!");
                     loadEditUsers();
-                }else{
+                } else {
                     displayModal("Error changing data!");
                 }
             });
@@ -144,79 +162,79 @@ function setFileUpdateEvent() {
 }
 
 function createUser() {
-    console.log("WHAAAAAAT");
     var name = document.getElementById("name").value,
-        unsername = document.getElementById("username").value,
+        username = document.getElementById("username").value,
         password = document.getElementById("password").value,
         passwordConfirm = document.getElementById("password-confirm").value,
-        isAdmin = (document.getElementById("isAdmin").checked===true?1:0);
+        isAdmin = (document.getElementById("isAdmin").checked === true ? 1 : 0);
 
     if (password !== passwordConfirm) {
         displayModal("Passwords do not match!");
         return;
     }
 
-    console.log("WHAAAAAAT2");
     $.post("../controller/controlPanelController.php", {
         name: name,
-        username: unsername,
+        username: username,
         password: password,
         isAdmin: isAdmin,
+        nick: Cookies.get("nick"),
         tag: "createUser"
     }, function (data, status) {
-        if(data=="duplicated"){
+        if (data == "duplicated") {
             displayModal("Username already exists!");
-        }else if(data=="ok"){
+        } else if (data == "ok") {
             document.querySelector(".create-user").reset();
             displayModal("User created!");
-        }else{
+        } else {
             displayModal("User not created!");
         }
     });
-
-    console.log("WHAAAAAAT3");
 }
 
-function getUsers(){
-    $.post("../controller/controlPanelController.php",{
-        tag:"getAllUsers"
-    },function(data,status){
-        var res = JSON.parse(data);
-        res.forEach(function(e){
-            $(divToLoad).append([{
-                name: e.name,
-                username: e.nickname
-              }].map(userEntry).join(''));
-        });
-        document.querySelectorAll(".user-edit").forEach(function(e){
-            e.addEventListener("click",function(){
-                loadChangeUser(this);
+function getUsers() {
+    $.post("../controller/controlPanelController.php", {
+        tag: "getAllUsers",
+        nick: Cookies.get("nick")
+    }, function (data, status) {
+        if (data != "") {
+            var res = JSON.parse(data);
+            res.forEach(function (e) {
+                $(divToLoad).append([{
+                    name: e.name,
+                    username: e.nickname
+                }].map(userEntry).join(''));
             });
-        });
-        document.querySelectorAll(".user-delete").forEach(function(e){
-            e.addEventListener("click",function(){
-                var nameUser = this.id.split("-");
-                $.post("../controller/controlPanelController.php",{
-                    name: nameUser[0],
-                    nickname: nameUser[1],
-                    tag: "delete-user"
-                },function(data,status){
-                    if(data=="ok"){
-                        displayModal("User deleted!");
-                    }else{
-                        displayModal("Delete failed!");
-                    }
-                    loadEditUsers();
+            document.querySelectorAll(".user-edit").forEach(function (e) {
+                e.addEventListener("click", function () {
+                    loadChangeUser(this);
                 });
             });
-        });
+            document.querySelectorAll(".user-delete").forEach(function (e) {
+                e.addEventListener("click", function () {
+                    var nameUser = this.id.split("-");
+                    $.post("../controller/controlPanelController.php", {
+                        name: nameUser[0],
+                        nickname: nameUser[1],
+                        tag: "delete-user"
+                    }, function (data, status) {
+                        if (data == "ok") {
+                            displayModal("User deleted!");
+                        } else {
+                            displayModal("Delete failed!");
+                        }
+                        loadEditUsers();
+                    });
+                });
+            });
+        }
     });
 }
 
 const userEntry = ({
     name,
     username
-  }) => `<div class="user-grid-layout row">
+}) => `<div class="user-grid-layout row">
   <p>${name}</p>
   <p>${username}</p>
   <a class="user-edit" id="${name}-${username}">

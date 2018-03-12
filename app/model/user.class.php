@@ -22,13 +22,17 @@ class User{
     return($stmt->rowCount()!==0);    
   }
 
-  public function createNewUser($db){
-    $stmt = $db->prepare("INSERT INTO `User`(`name`, `nickname`, `password`, `privilege`) VALUES (:name,:nick,:password,:privilege)");
-    $stmt->bindParam(":name",$this->name);
-    $stmt->bindParam(":nick",$this->nickname);
-    $stmt->bindParam(":password",$this->password);
-    $stmt->bindParam(":privilege",$this->privilege);
-    return($stmt->execute());
+  public function createNewUser($db,$nick){
+    if($this->verifyPrivilege($db,$nick)){
+      $stmt = $db->prepare("INSERT INTO `User`(`name`, `nickname`, `password`, `privilege`) VALUES (:name,:nick,:password,:privilege)");
+      $stmt->bindParam(":name",$this->name);
+      $stmt->bindParam(":nick",$this->nickname);
+      $stmt->bindParam(":password",$this->password);
+      $stmt->bindParam(":privilege",$this->privilege);
+      return($stmt->execute());
+    }else{
+      return;
+    }
   }
 
   public function getUserData($db){
@@ -40,11 +44,15 @@ class User{
     return(json_encode($res));
   }
 
-  public function getAllUsers($db){
-    $stmt = $db->prepare("SELECT `name`, `nickname` FROM `User` ");
-    $stmt->execute();
-    $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    return(json_encode($res));
+  public function getAllUsers($db,$nick){
+    if($this->verifyPrivilege($db,$nick)){
+      $stmt = $db->prepare("SELECT `name`, `nickname` FROM `User` ");
+      $stmt->execute();
+      $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      return(json_encode($res));
+    }else{
+      return;
+    }
   }
 
   public function deleteUser($db){
@@ -63,6 +71,14 @@ class User{
     $stmt->bindParam(":password",$this->password);
     $stmt->bindParam(":privilege",$this->privilege);
     return($stmt->execute());
+  }
+
+  public function verifyPrivilege($db,$nick){
+    $stmt = $db->prepare("SELECT `privilege` FROM `User` WHERE `nickname`=:nick"); 
+    $stmt->bindParam(":nick",$nick);
+    $stmt->execute();
+    $res = $stmt->fetch(PDO::FETCH_ASSOC);
+    return($res["privilege"]==1);
   }
 
   /* Getters */
