@@ -6,6 +6,15 @@ class User{
   private $password;
   private $privilege;
 
+  public function login($db){
+    $stmt = $db->prepare("SELECT `name`, `nickname`, `password`, `privilege` FROM `User` WHERE `nickname`=:nick");
+    $stmt->bindParam(":nick",$this->nickname);
+    $stmt->execute();
+
+    $res = $stmt->fetch(PDO::FETCH_ASSOC);
+    return($res);
+  }
+
   public function checkDuplicatedNick($db){
     $stmt = $db->prepare("SELECT * FROM `User` WHERE `nickname`=:nick");
     $stmt->bindParam(":nick",$this->nickname);

@@ -1,6 +1,6 @@
 <!-- Create new user content -->
 <h2>Create new user: </h2>
-<form onsubmit="return createUser()" class="create-user">
+<form onsubmit="createUser();return false;" class="create-user" id="create-user">
     <input type="text" name="" id="name" placeholder="Name" required>
     <input type="text" name="" id="username" placeholder="Username" required>
     <input type="password" name="" id="password" placeholder="Password" required>
