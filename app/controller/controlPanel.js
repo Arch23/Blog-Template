@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    isLoggedIn();
     checkPrivilege();
     setUpAjax();
     setUpModal();
@@ -44,11 +45,20 @@ function setUpAjax() {
                     loadEditUsers();
                     break
                 case "logoff":
-
+                    logoff();
                     break;
             }
         });
     });
+}
+
+function logoff(){
+    Cookies.remove("name");
+    Cookies.remove("nick");
+    Cookies.remove("privilege");
+    window.location.href = "loginCP.html";
+    // window.location.replace("loginCP.html");
+
 }
 
 function loadEditUsers() {
@@ -187,7 +197,6 @@ function getUsers() {
         tag: "getAllUsers",
         nick: Cookies.get("nick")
     }, function (data, status) {
-        console.log(data);
         if (data != "") {
             var res = JSON.parse(data);
             res.forEach(function (e) {

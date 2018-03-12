@@ -1,9 +1,23 @@
+/* 
+    loading div
+*/
+
 function createLoader(parentDiv) {
     parentDiv.html("<div class=\"loader\"></div>");
 }
 
 function deleteLoader() {
     $(".loader").remove();
+}
+
+/* 
+    is the user logged in the system
+*/
+
+function isLoggedIn(){
+    if(typeof Cookies.get("name") == 'undefined' || typeof Cookies.get("nick") == 'undefined'){
+        window.location.replace("loginCP.html");
+    }
 }
 
 /* 
