@@ -3,9 +3,11 @@
 class Post {
   private $date;
   private $title;
-  private $mainImg;
+  private $imgUrl;
+  private $imgAlt="";
   private $text;
-  private $user;
+  private $userName;
+  private $userNick;
 
   /* Main Functions */
   public function getAllPosts($db){
@@ -32,6 +34,20 @@ class Post {
     return($data);
   }
 
+  public function saveNewPost($db) {
+    $stmt = $db->prepare("INSERT INTO `Post` (`title`, `date`, `text`, `img_url`, `img_alt`, `User_nickname`, `User_name`) VALUES (:title, :date, :text, :imgUrl, :imgAlt, :nickname, :name)");
+
+    $stmt->bindParam(":title", $this->title);
+    $stmt->bindParam(":date", $this->date);
+    $stmt->bindParam(":text", $this->text);
+    $stmt->bindParam(":imgUrl", $this->imgUrl);
+    $stmt->bindParam(":imgAlt", $this->imgAlt);
+    $stmt->bindParam(":nickname", $this->userNick);
+    $stmt->bindParam(":name", $this->userName);
+
+    return($stmt->execute());
+  }
+
   /* Getters */
   public function getDate(){
     return($this->date);
@@ -39,14 +55,20 @@ class Post {
   public function getTitle(){
     return($this->title);
   }
-  public function getMainImg(){
-    return($this->mainImg);
+  public function getImgUrl(){
+    return($this->imgUrl);
+  }
+  public function getImgAlt(){
+    return($this->imgAlt);
   }
   public function getText(){
     return($this->text);
   }
-  public function getUser(){
-    return($this->user);
+  public function getUserName(){
+    return($this->userName);
+  }
+  public function getUserNick(){
+    return($this->userNick);
   }
 
   /* Setters */
@@ -56,13 +78,19 @@ class Post {
   public function setTitle($title){
     $this->title = $title;
   }
-  public function setMainImg($mainImg){
-    $this->mainImg = $mainImg;
+  public function setImgUrl($imgUrl){
+    $this->imgUrl = $imgUrl;
+  }
+  public function setImgAlt($imgAlt){
+    $this->imgAlt = $imgAlt;
   }
   public function setText($text){
     $this->text = $text;
   }
-  public function setUser($user){
-    $this->user = $user;
+  public function setUserName($userName){
+    $this->userName = $userName;
+  }
+  public function setUserNick($userNick){
+    $this->userNick = $userNick;
   }
 }

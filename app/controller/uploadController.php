@@ -28,8 +28,6 @@ $file = str_replace("/trumfolder/plugins/upload/home/mysite/public_html", "", $f
  * Upload directory
  * 
  */
-
- 
 define("UPLOADDIR", IMGS_FOLDER);
 
 $totalImgs = new FilesystemIterator(IMGS_FOLDER, FilesystemIterator::SKIP_DOTS);

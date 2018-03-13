@@ -143,6 +143,7 @@ function setFileUpdateEvent() {
         }
 
         fileName.textContent = nameOnly;
+        //postMainImage();
     });
 
     loadTextEditor();
@@ -229,25 +230,53 @@ function postMainImage() {
         contentType: false,
         data: formData
     }).done(function (data) {
-        console.log(JSON.parse(data));
+        console.log(data);
     }).fail(function (data) {
         console.log(data);
     });
 }
 
-function createPost(imgUrl) {
+function createPost() {
     const blogTitle = $("#post-title").val();
     const blogText = $("#text-area").trumbowyg("html");
     console.log(blogTitle);
     console.log(blogText);
 
-    $.post("../controller/newPostController.php", {
+    $.post("../controller/postController.php", {
+            tag: "newPost",
             title: blogTitle,
             text: blogText,
-            mainImg: imgUrl
+            userName: Cookies.get("name")
         },
         function (data) {
+            console.log(data);
+        });
+}
 
+function sendPost() {
+    /* ImageMain */
+    const form = $('#post-editor')[0];
+    var formData = new FormData(form);
+    const image = document.getElementById("image").files[0];
+    const blogTitle = $("#post-title").val();
+    const blogText = $("#text-area").trumbowyg("html");
+
+    formData.append("file", image);
+    formData.append("tag", "newPost");
+    formData.append("title", blogTitle);
+    formData.append("text", blogText);
+    formData.append("userName", Cookies.get("name"));
+    formData.append("userNick", Cookies.get("nick"));
+    
+        $.ajax("../controller/controlPanelController.php", {
+            method: 'post',
+            processData: false,
+            contentType: false,
+            data: formData
+        }).done(function (data) {
+            console.log(data);
+        }).fail(function (data) {
+            console.log(data);
         });
 }
 
