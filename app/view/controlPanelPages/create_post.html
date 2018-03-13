@@ -1,16 +1,16 @@
 <!-- create post content -->
 <h2>Create new post</h2>
-<form id="VSF" action="" class="create-post">
+<form id="post-editor" onsubmit="createPost();return false;" class="create-post">
     <div class="create-post-grid">
         <label class="title-label" for="title">Title:</label>
-        <input class="title-input" type="text" id="title">
+        <input class="title-input" type="text" id="post-title">
         <label class="btn create-post-image" for="image">Upload post main image&nbsp;&nbsp;
             <span id="file-name">
         </label>
         <div class="text-input">
             <div id="text-area"></div>
         </div>
-        <input type="button" class="btn btn-big btn-create-post" value="Create Post">
+        <input id="btn-create-post" type="submit" class="btn btn-big btn-create-post" value="Create Post">
     </div>
     <input type="file" id="image" accept="image/*">
 </form>

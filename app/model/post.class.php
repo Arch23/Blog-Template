@@ -16,6 +16,10 @@ class Post {
     return($data);
   }
 
+  public function getNumberPosts($db){
+    return(count($this->getAllPosts($db)));
+  }
+
   public function getPost($db, $title, $author, $date){
     $stmt = $db->prepare("SELECT * FROM `Post` WHERE title = :title AND User_name = :author AND date = :date");
     $stmt->bindParam(":title", $title, PDO::PARAM_STR);

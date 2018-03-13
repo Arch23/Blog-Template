@@ -1,6 +1,7 @@
 <?php
 require_once "../config.php";
 require_once "../model/user.class.php";
+require_once "../model/post.class.php";
 
 switch($_POST["tag"]){
     case "createUser":
@@ -46,6 +47,10 @@ switch($_POST["tag"]){
         $user->setNickname($_POST["nickname"]);
         echo($user->getUserData($db));
         break;
+    case "postNumber":
+        $post = new Post;
+        echo($post->getNumberPosts($db));
+    break;
 }
 
 ?>

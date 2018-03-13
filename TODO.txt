@@ -1,0 +1,8 @@
+Criar post
+Listar post
+Editar/Deletar post
+
+session_login()
+
+melhorias de interface
+melhorias de código

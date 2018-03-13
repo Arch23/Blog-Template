@@ -3,12 +3,14 @@ $(document).ready(function () {
     checkPrivilege();
     setUpAjax();
     setUpModal();
+    getPostNumber();
 });
 
 var divToLoad = ".content";
+var postNumber = 0;
 
-function checkPrivilege(){
-    if(Cookies.get("privilege")==1){
+function checkPrivilege() {
+    if (Cookies.get("privilege") == 1) {
         $("#options-menu").prepend("<li><a class=\"btn btn-options config-menu\" id=\"create-user\">Create new user</a></li><li><a class=\"btn btn-options config-menu\" id=\"edit-users\">Edit Users</a></li>");
     }
 }
@@ -52,7 +54,7 @@ function setUpAjax() {
     });
 }
 
-function logoff(){
+function logoff() {
     Cookies.remove("name");
     Cookies.remove("nick");
     Cookies.remove("privilege");
@@ -141,21 +143,6 @@ function setFileUpdateEvent() {
         }
 
         fileName.textContent = nameOnly;
-        var url = "../controller/uploadController.php";
-
-        var form = $('#VSF')[0];
-        var formData = new FormData(form);
-        formData.append("file", document.getElementById("image").files[0]);
-        $.ajax(url, {
-            method: 'post',
-            processData: false,
-            contentType: false,
-            data: formData
-        }).done(function (data) {
-            console.log(data);
-        }).fail(function (data) {
-            console.log(data);
-        });
     });
 
     loadTextEditor();
@@ -229,6 +216,48 @@ function getUsers() {
             });
         }
     });
+}
+
+function postMainImage() {
+    var url = "../controller/uploadController.php";
+    var form = $('#post-editor')[0];
+    var formData = new FormData(form);
+    formData.append("file", document.getElementById("image").files[0]);
+    $.ajax(url, {
+        method: 'post',
+        processData: false,
+        contentType: false,
+        data: formData
+    }).done(function (data) {
+        console.log(JSON.parse(data));
+    }).fail(function (data) {
+        console.log(data);
+    });
+}
+
+function createPost(imgUrl) {
+    const blogTitle = $("#post-title").val();
+    const blogText = $("#text-area").trumbowyg("html");
+    console.log(blogTitle);
+    console.log(blogText);
+
+    $.post("../controller/newPostController.php", {
+            title: blogTitle,
+            text: blogText,
+            mainImg: imgUrl
+        },
+        function (data) {
+
+        });
+}
+
+function getPostNumber() {
+    $.post("../controller/controlPanelController.php", {
+            tag: 'postNumber'
+        },
+        function (data) {
+            postNumber = data;
+        });
 }
 
 const userEntry = ({
