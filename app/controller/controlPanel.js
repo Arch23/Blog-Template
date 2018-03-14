@@ -7,7 +7,6 @@ $(document).ready(function () {
 });
 
 var divToLoad = ".content";
-var postNumber = 0;
 
 function checkPrivilege() {
     if (Cookies.get("privilege") == 1) {
@@ -285,7 +284,7 @@ function getPostNumber() {
             tag: 'postNumber'
         },
         function (data) {
-            postNumber = data;
+            Cookies.set("numPosts", data);
         });
 }
 

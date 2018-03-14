@@ -58,7 +58,7 @@ switch($_POST["tag"]){
 
     case "newPost":
         $post = new Post;
-        $post->setDate(date("d-m-Y"));
+        $post->setDate(date("Y-m-d"));
         $post->setTitle($_POST["title"]);
         $post->setText($_POST["text"]);
         $post->setUserName($_POST["userName"]);
