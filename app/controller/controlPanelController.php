@@ -83,6 +83,15 @@ switch($_POST["tag"]){
         $post = new Post;
         echo json_encode($post->getAllPosts($db));
     break;
+
+    case "deletePost":
+        $post = new Post;
+        $post->setTitle($_POST["title"]);
+        $post->setDate($_POST["date"]);
+        $post->setUserName($_POST["userName"]);
+        $post->setUserNick($_POST["userNick"]);
+        echo($post->deletePost($db)?"deleted":"not_deleted");
+    break;
 }
 
 ?>

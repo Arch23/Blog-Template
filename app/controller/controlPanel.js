@@ -293,27 +293,66 @@ function getUserPosts(nick, name) {
             userNick: nick
         },
         function (data) {
-            console.log(JSON.parse(data));
+            data = JSON.parse(data);
+            var newDate;
+            if (!!data.length) {
+                data.forEach(e => {
+                    newDate = e.date.split("-").reverse().join("/");
+                    $(divToLoad).append([{
+                        title: e.title,
+                        date: newDate,
+                        authorName: e.User_name,
+                        authorNick: e.User_nickname
+                    }].map(postEntry).join(''));
+                });
+            } else {
+                newDate = data.date.split("-").reverse().join("/");
+                $(divToLoad).append([{
+                    title: data.title,
+                    date: newDate,
+                    authorName: Cookies.get("name"),
+                    authorNick: Cookies.get("nick")
+                }].map(postEntry).join(''));
+            }
+            document.querySelectorAll(".post-delete").forEach(function(e){
+                e.addEventListener("click", function(){
+                    //TERMINAR
+                    /* $.post("../controller/controlPanelController.php", {
+                        tag: "deletePost"
+                    }) */;
+                })
+            });
         });
 }
 
 function getAllPosts() {
     console.log("?");
     $.post("../controller/controlPanelController.php", {
-        tag: "getAllPost",
-    },
-    function (data) {
-        data = JSON.parse(data);
-        var newDate;
-        data.forEach(e => {
-            newDate = e.date.split("-").reverse().join("/");
-            $(divToLoad).append([{
-                title: e.title,
-                date: newDate,
-                author: e.User_name
-            }].map(postEntry).join(''));
+            tag: "getAllPost",
+        },
+        function (data) {
+            data = JSON.parse(data);
+            var newDate;
+            if (!!data.length) {
+                data.forEach(e => {
+                    newDate = e.date.split("-").reverse().join("/");
+                    $(divToLoad).append([{
+                        title: e.title,
+                        date: newDate,
+                        authorName: e.User_name,
+                        authorNick: e.User_nickname
+                    }].map(postEntry).join(''));
+                });
+            } else {
+                newDate = data.date.split("-").reverse().join("/");
+                $(divToLoad).append([{
+                    title: data.title,
+                    date: newDate,
+                    authorName: data.User_name,
+                    authorNick: data.User_nickname
+                }].map(postEntry).join(''));
+            }
         });
-    });
 }
 
 const userEntry = ({
@@ -332,16 +371,15 @@ const userEntry = ({
 
 const postEntry = ({
     title,
-    author,
+    authorName,
+    authorNick,
     date
 }) => `<div class="list-content-grid row">
-<p>${title}</p>
-<p>${author}</p>
-<p>${date}</p>
-<a href="#">
-    <i class="icon ion-edit"></i>
-</a>
-<a href="#">
+<div class="title"><p>${title}</p></div>
+<div><p>${authorName}</p></div>
+<div><p>${authorNick}</p></div>
+<div><p>${date}</p></div>
+<a class="post-delete" href="#">
     <i class="icon ion-close-circled"></i>
 </a>
 </div>`;

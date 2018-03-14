@@ -56,8 +56,20 @@ class Post {
 
     $stmt->execute();
     $data = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
     return($data);
+  }
+
+  public function deletePost($db){
+    $stmt = $db->prepare("DELETE FROM `Post` WHERE `User_nickname` = :nickname AND 
+    `User_name` = :name AND `title` = :title AND `date` = :date");
+
+    $stmt->bindParam(":nickname", $this->userNick);
+    $stmt->bindParam(":name", $this->userName);    
+    $stmt->bindParam(":title", $this->title);    
+    $stmt->bindParam(":date", $this->date);
+
+    return($stmt->execute());
   }
 
   /* Getters */
