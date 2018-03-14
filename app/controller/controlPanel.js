@@ -19,21 +19,13 @@ function setUpAjax() {
         link.addEventListener("click", function () {
             switch (this.id) {
                 case "create-user":
-                    $(divToLoad).fadeOut("fast", function () {
-                        $(divToLoad).load("./controlPanelPages/create_user.html", function () {
-                            $(divToLoad).fadeIn("fast");
-                        });
-                    });
+                    loadCreateUser();
                     break;
                 case "create-post":
                     loadCreatePost();
                     break;
                 case "list-posts":
-                    $(divToLoad).fadeOut("fast", function () {
-                        $(divToLoad).load("./controlPanelPages/list_posts.html", function () {
-                            $(divToLoad).fadeIn("fast");
-                        });
-                    });
+                    listPosts();
                     break;
                 case "edit-users":
                     loadEditUsers();
@@ -55,13 +47,30 @@ function logoff() {
 
 }
 
+function loadCreateUser() {
+    $(divToLoad).fadeOut("fast", function () {
+        $(divToLoad).load("./controlPanelPages/create_user.html", function () {
+            $(divToLoad).fadeIn("fast");
+        });
+    });
+}
+
 function loadCreatePost() {
     $(divToLoad).fadeOut("fast", function () {
         $(divToLoad).load("./controlPanelPages/create_post.html", function () {
             /* $("#text-area").trumbowyg(); */
             setFileUpdateEvent();
-            deleteUnusedImages();
             getPostNumber();
+            deleteUnusedImages();
+            $(divToLoad).fadeIn("fast");
+        });
+    });
+}
+
+function listPosts() {
+    $(divToLoad).fadeOut("fast", function () {
+        $(divToLoad).load("./controlPanelPages/list_posts.html", function () {
+            getPosts();
             $(divToLoad).fadeIn("fast");
         });
     });
@@ -238,19 +247,19 @@ function sendPost() {
     formData.append("userName", Cookies.get("name"));
     formData.append("userNick", Cookies.get("nick"));
 
-        $.ajax("../controller/controlPanelController.php", {
-            method: 'post',
-            processData: false,
-            contentType: false,
-            data: formData
-        }).done(function (data) {
-            if(data === "saved"){
-                displayModal("Post created successfully!");
-                loadCreatePost();
-            }
-        }).fail(function (data) {
-            console.log(data);
-        });
+    $.ajax("../controller/controlPanelController.php", {
+        method: 'post',
+        processData: false,
+        contentType: false,
+        data: formData
+    }).done(function (data) {
+        if (data === "saved") {
+            displayModal("Post created successfully!");
+            loadCreatePost();
+        }
+    }).fail(function (data) {
+        console.log(data);
+    });
 }
 
 function getPostNumber() {
@@ -263,9 +272,48 @@ function getPostNumber() {
 }
 
 function deleteUnusedImages() {
-    $.post("../controller/uploadController.php",{
+    $.post("../controller/uploadController.php", {
         controlTag: "deleteOlder"
-    });   
+    });
+}
+
+function getPosts() {
+    console.log(Cookies.get("privilege"));
+    if (Cookies.get("privilege") === "1") {
+        getAllPosts();
+    } else {
+        getUserPosts(Cookies.get("nick"), Cookies.get("name"));
+    }
+}
+
+function getUserPosts(nick, name) {
+    $.post("../controller/controlPanelController.php", {
+            tag: "getUserPost",
+            userName: name,
+            userNick: nick
+        },
+        function (data) {
+            console.log(JSON.parse(data));
+        });
+}
+
+function getAllPosts() {
+    console.log("?");
+    $.post("../controller/controlPanelController.php", {
+        tag: "getAllPost",
+    },
+    function (data) {
+        data = JSON.parse(data);
+        var newDate;
+        data.forEach(e => {
+            newDate = e.date.split("-").reverse().join("/");
+            $(divToLoad).append([{
+                title: e.title,
+                date: newDate,
+                author: e.User_name
+            }].map(postEntry).join(''));
+        });
+    });
 }
 
 const userEntry = ({
@@ -280,4 +328,20 @@ const userEntry = ({
   <a class="user-delete" id="${name}-${username}">
       <i class="icon ion-close-circled"></i>
   </a>
+</div>`;
+
+const postEntry = ({
+    title,
+    author,
+    date
+}) => `<div class="list-content-grid row">
+<p>${title}</p>
+<p>${author}</p>
+<p>${date}</p>
+<a href="#">
+    <i class="icon ion-edit"></i>
+</a>
+<a href="#">
+    <i class="icon ion-close-circled"></i>
+</a>
 </div>`;

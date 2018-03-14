@@ -48,6 +48,18 @@ class Post {
     return($stmt->execute());
   }
 
+  public function getUserPost($db) {
+    $stmt = $db->prepare("SELECT `title`, `date` FROM `Post` WHERE `User_nickname` = :nickname AND `User_name` = :name");
+
+    $stmt->bindParam(":nickname", $this->userNick);
+    $stmt->bindParam(":name", $this->userName);
+
+    $stmt->execute();
+    $data = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    return($data);
+  }
+
   /* Getters */
   public function getDate(){
     return($this->date);

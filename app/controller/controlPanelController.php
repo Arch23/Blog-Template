@@ -69,8 +69,19 @@ switch($_POST["tag"]){
         ob_end_clean();
         $dataImage = json_decode($dataImage);
         $post->setImgUrl($dataImage->file);
-
         echo($post->saveNewPost($db)?"saved":"not_saved");
+    break;
+
+    case "getUserPost":
+        $post = new Post;
+        $post->setUserName($_POST["userName"]);
+        $post->setUserNick($_POST["userNick"]);
+        echo json_encode($post->getUserPost($db));
+    break;
+
+    case "getAllPost":
+        $post = new Post;
+        echo json_encode($post->getAllPosts($db));
     break;
 }
 
