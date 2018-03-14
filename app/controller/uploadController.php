@@ -4,10 +4,13 @@ require_once "../config.php";
 
 $totalImgs = new FilesystemIterator(IMGS_FOLDER, FilesystemIterator::SKIP_DOTS);
 
+$numDel = $_COOKIE["numPosts"]+1;
+
+
 if(isset($_POST["controlTag"])){
     if($_POST["controlTag"]=="deleteOlder"){
         foreach($totalImgs as $key => $value){
-            if(strpos($value, "post-".$_COOKIE["numPosts"]."")){
+            if(strpos($value, "post-".$numDel."")){
                 unlink($value);
             }
         }
@@ -30,10 +33,10 @@ if(isset($_POST["controlTag"])){
         }
         if($allowed){
             if(filesize($file["tmp_name"]) >= IMAGE_MAX_SIZE){
-                if(move_uploaded_file($file['tmp_name'], IMGS_FOLDER . "post-".$_COOKIE["numPosts"]."-image-".$numImgs.".".$ext)){
+                if(move_uploaded_file($file['tmp_name'], IMGS_FOLDER . "post-".$numDel."-image-".$numImgs.".".$ext)){
                     $url = SERVER;
                     $url = str_replace("controller", "images/", $url);
-                    $fileName = "post-".$_COOKIE["numPosts"]."-image-".$numImgs.".".$ext;
+                    $fileName = "post-".$numDel."-image-".$numImgs.".".$ext;
                     $url = $url.$fileName;
                     $data = [
                         "message" => "uploadSuccess",

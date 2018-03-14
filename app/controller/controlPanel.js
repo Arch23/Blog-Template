@@ -3,7 +3,6 @@ $(document).ready(function () {
     checkPrivilege();
     setUpAjax();
     setUpModal();
-    getPostNumber();
 });
 
 var divToLoad = ".content";
@@ -27,13 +26,7 @@ function setUpAjax() {
                     });
                     break;
                 case "create-post":
-                    $(divToLoad).fadeOut("fast", function () {
-                        $(divToLoad).load("./controlPanelPages/create_post.html", function () {
-                            /* $("#text-area").trumbowyg(); */
-                            setFileUpdateEvent();
-                            $(divToLoad).fadeIn("fast");
-                        });
-                    });
+                    loadCreatePost();
                     break;
                 case "list-posts":
                     $(divToLoad).fadeOut("fast", function () {
@@ -60,6 +53,18 @@ function logoff() {
     window.location.href = "loginCP.html";
     // window.location.replace("loginCP.html");
 
+}
+
+function loadCreatePost() {
+    $(divToLoad).fadeOut("fast", function () {
+        $(divToLoad).load("./controlPanelPages/create_post.html", function () {
+            /* $("#text-area").trumbowyg(); */
+            setFileUpdateEvent();
+            deleteUnusedImages();
+            getPostNumber();
+            $(divToLoad).fadeIn("fast");
+        });
+    });
 }
 
 function loadEditUsers() {
@@ -218,40 +223,6 @@ function getUsers() {
     });
 }
 
-function postMainImage() {
-    var url = "../controller/uploadController.php";
-    var form = $('#post-editor')[0];
-    var formData = new FormData(form);
-    formData.append("file", document.getElementById("image").files[0]);
-    $.ajax(url, {
-        method: 'post',
-        processData: false,
-        contentType: false,
-        data: formData
-    }).done(function (data) {
-        console.log(data);
-    }).fail(function (data) {
-        console.log(data);
-    });
-}
-
-function createPost() {
-    const blogTitle = $("#post-title").val();
-    const blogText = $("#text-area").trumbowyg("html");
-    console.log(blogTitle);
-    console.log(blogText);
-
-    $.post("../controller/postController.php", {
-            tag: "newPost",
-            title: blogTitle,
-            text: blogText,
-            userName: Cookies.get("name")
-        },
-        function (data) {
-            console.log(data);
-        });
-}
-
 function sendPost() {
     /* ImageMain */
     const form = $('#post-editor')[0];
@@ -266,14 +237,17 @@ function sendPost() {
     formData.append("text", blogText);
     formData.append("userName", Cookies.get("name"));
     formData.append("userNick", Cookies.get("nick"));
-    
+
         $.ajax("../controller/controlPanelController.php", {
             method: 'post',
             processData: false,
             contentType: false,
             data: formData
         }).done(function (data) {
-            console.log(data);
+            if(data === "saved"){
+                displayModal("Post created successfully!");
+                loadCreatePost();
+            }
         }).fail(function (data) {
             console.log(data);
         });
@@ -286,6 +260,12 @@ function getPostNumber() {
         function (data) {
             Cookies.set("numPosts", data);
         });
+}
+
+function deleteUnusedImages() {
+    $.post("../controller/uploadController.php",{
+        controlTag: "deleteOlder"
+    });   
 }
 
 const userEntry = ({
