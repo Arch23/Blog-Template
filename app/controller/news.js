@@ -50,7 +50,7 @@ const postLoadWithImg = ({
     <p class="infos-date">${date}</p>
 </div>
 </section>
-<section class="box content">
+<section class="box content news-body">
 <img src="${imgUrl}" alt="${imgAlt}">
 ${text}
 </section>`;
@@ -69,6 +69,6 @@ const postLoadWithoutImg = ({
     <p class="infos-date">${date}</p>
 </div>
 </section>
-s<section class="box content">
+s<section class="box content news-body">
 ${text}
 </section>`;
