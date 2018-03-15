@@ -43,6 +43,7 @@ function logoff() {
     Cookies.remove("nick");
     Cookies.remove("privilege");
     window.location.href = "loginCP.html";
+    sessionStorage.clear();
     // window.location.replace("loginCP.html");
 
 }
@@ -278,7 +279,6 @@ function deleteUnusedImages() {
 }
 
 function getPosts() {
-    console.log(Cookies.get("privilege"));
     if (Cookies.get("privilege") === "1") {
         getAllPosts();
     } else {
@@ -295,64 +295,94 @@ function getUserPosts(nick, name) {
         function (data) {
             data = JSON.parse(data);
             var newDate;
+            var n = 0;
             if (!!data.length) {
                 data.forEach(e => {
                     newDate = e.date.split("-").reverse().join("/");
                     $(divToLoad).append([{
+                        num: n,
                         title: e.title,
                         date: newDate,
                         authorName: e.User_name,
                         authorNick: e.User_nickname
                     }].map(postEntry).join(''));
+                    n++;
                 });
             } else {
                 newDate = data.date.split("-").reverse().join("/");
                 $(divToLoad).append([{
+                    num: n,
                     title: data.title,
                     date: newDate,
                     authorName: Cookies.get("name"),
                     authorNick: Cookies.get("nick")
                 }].map(postEntry).join(''));
             }
-            document.querySelectorAll(".post-delete").forEach(function(e){
-                e.addEventListener("click", function(){
-                    //TERMINAR
-                    /* $.post("../controller/controlPanelController.php", {
-                        tag: "deletePost"
-                    }) */;
-                })
-            });
+
         });
 }
 
 function getAllPosts() {
-    console.log("?");
     $.post("../controller/controlPanelController.php", {
             tag: "getAllPost",
         },
         function (data) {
             data = JSON.parse(data);
             var newDate;
+            var n = 0;
             if (!!data.length) {
                 data.forEach(e => {
                     newDate = e.date.split("-").reverse().join("/");
                     $(divToLoad).append([{
+                        num: n,
                         title: e.title,
                         date: newDate,
                         authorName: e.User_name,
                         authorNick: e.User_nickname
                     }].map(postEntry).join(''));
+                    n++;
                 });
             } else {
                 newDate = data.date.split("-").reverse().join("/");
                 $(divToLoad).append([{
+                    num: n,
                     title: data.title,
                     date: newDate,
                     authorName: data.User_name,
                     authorNick: data.User_nickname
                 }].map(postEntry).join(''));
             }
+            addEventDelete();
         });
+}
+
+function addEventDelete() {
+    document.querySelectorAll(".delete-post").forEach(function (e) {
+        e.addEventListener("click", function () {
+            const parent = e.parentNode.id;
+            const title = document.querySelector("#" + parent + " div.title p").textContent;
+            var date = document.querySelector("#" + parent + " div.date p").textContent;
+            date = date.split("/").reverse().join("-");
+            const userName = document.querySelector("#" + parent + " div.name p").textContent;
+            const userNick = document.querySelector("#" + parent + " div.nick p").textContent;
+            $.post("../controller/controlPanelController.php",{
+                tag: "deletePost",
+                title: title,
+                date: date,
+                userName: userName,
+                userNick: userNick
+            },
+                function (data) {
+                    if(data === "deleted"){
+                        displayModal("Deleted with Success!");
+                        listPosts();
+                    }else{
+                        displayModal("Error ocurred, try again later.");
+                    }
+                });
+        })
+    });
+
 }
 
 const userEntry = ({
@@ -370,16 +400,17 @@ const userEntry = ({
 </div>`;
 
 const postEntry = ({
+    num,
     title,
     authorName,
     authorNick,
     date
-}) => `<div class="list-content-grid row">
+}) => `<div id="entry-${num}"class="list-content-grid row">
 <div class="title"><p>${title}</p></div>
-<div><p>${authorName}</p></div>
-<div><p>${authorNick}</p></div>
-<div><p>${date}</p></div>
-<a class="post-delete" href="#">
+<div class="name"><p>${authorName}</p></div>
+<div class="nick"><p>${authorNick}</p></div>
+<div class="date"><p>${date}</p></div>
+<a class="delete-post" href="#">
     <i class="icon ion-close-circled"></i>
 </a>
 </div>`;
