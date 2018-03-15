@@ -41,7 +41,7 @@ const postLoadWithImg = ({
   imgUrl,
   imgAlt,
   text
-}) => ` <section class="hero">
+}) => ` <section class="hero news-hero">
 <h1>${title}</h1>
 </section>
 <section class="infos clearfix">
