@@ -2,41 +2,67 @@
 
 require_once "../config.php";
 
-/* $targetDir = IMGS_FOLDER;
+$totalImgs = new FilesystemIterator(IMGS_FOLDER, FilesystemIterator::SKIP_DOTS);
 
-$totalImgs = new FilesystemIterator($targetDir, FilesystemIterator::SKIP_DOTS);
-$numImgs = iterator_count($totalImgs);
+$numDel = $_COOKIE["numPosts"]+1;
 
-print_r($_FILES);
 
-foreach($_FILES["file"] as $key=>$value){
-  echo "$key => $value \n";
-  if($key == "name"){
-    $path_parts = pathinfo('test.png');
-  }
+if(isset($_POST["controlTag"])){
+    if($_POST["controlTag"]=="deleteOlder"){
+        foreach($totalImgs as $key => $value){
+            if(strpos($value, "post-".$numDel."")){
+                unlink($value);
+            }
+        }
+    }
+}else{
+    $numImgs = iterator_count($totalImgs);
+    $allowed = false;
+
+    if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+        $file = array_shift($_FILES);
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $fileContents = file_get_contents($file["tmp_name"]);
+        $mime = $finfo->buffer($fileContents);
+        $ext = pathinfo($file["name"])["extension"];
+
+        if(in_array($mime, IMAGE_TYPE_WHITE_LIST)){
+            if(in_array($ext, IMAGE_EXT_WHITE_LIST)){
+                $allowed = true;
+            }
+        }
+        if($allowed){
+            if(filesize($file["tmp_name"]) >= IMAGE_MAX_SIZE){
+                if(move_uploaded_file($file['tmp_name'], IMGS_FOLDER . "post-".$numDel."-image-".$numImgs.".".$ext)){
+                    $url = SERVER;
+                    $url = str_replace("controller", "images/", $url);
+                    $fileName = "post-".$numDel."-image-".$numImgs.".".$ext;
+                    $url = $url.$fileName;
+                    $data = [
+                        "message" => "uploadSuccess",
+                        "file" => $url
+                    ];
+                }else{
+                    $data = [
+                        "message" => "uploadFailed"
+                    ];
+                }
+            }else{
+                $data = [
+                    "message" => "ImageSizeNotAllowed"
+                ];
+            }
+        }else{
+            $data = [
+                "message" => "ImageTypeNotAllowed"
+            ];
+        }
+    } 
+    echo json_encode($data);
 }
 
-move_uploaded_file($_FILES["file"]["tmp_name"], 
-IMGS_FOLDER."/image-".$numImgs.".".$path_parts["extension"]);
 
- */
-/* 
-$file = dirname($_SERVER['PHP_SELF']) . str_replace('./', '/', UPLOADDIR) . $file['name'];
-$file = str_replace("/trumfolder/plugins/upload/home/mysite/public_html", "", $file); 
-*/
-/**
- * Upload directory
- * 
- */
-
- 
-define("UPLOADDIR", IMGS_FOLDER);
-
-$totalImgs = new FilesystemIterator(IMGS_FOLDER, FilesystemIterator::SKIP_DOTS);
-$numImgs = iterator_count($totalImgs);
-$server = "http://".$_SERVER['SERVER_NAME'] . dirname($_SERVER['PHP_SELF']);
-
-// Detect if it is an AJAX request
+/* // Detect if it is an AJAX request
 if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
     $file = array_shift($_FILES);
     //if(move_uploaded_file($file['tmp_name'], UPLOADDIR . basename($file['name']))) {
@@ -61,5 +87,4 @@ if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQU
         'message' => 'uploadNotAjax',
         'formData' => $_POST
     );
-}
-echo json_encode($data);
+} */

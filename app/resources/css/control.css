@@ -53,7 +53,7 @@ body{
 }
 
 .box {
-    width: 1200px;
+    width: 1250px;
     margin: 0 auto;
 }
 
@@ -116,7 +116,7 @@ body{
 
 .options {
     float: left;
-    width: 30%;
+    width: 20%;
     background-color: white;
     margin: 10px;
     border-radius: 5px;
@@ -131,10 +131,10 @@ h2 {
 
 .content {
     float: right;
-    width: 65%;
+    width: 75%;
     background-color: white;
     border-radius: 5px;
-    padding: 20px;
+    padding: 20px 10px;
     margin: 10px;
     height: 100%;
 }
@@ -229,9 +229,10 @@ h2 {
     width: 100%;
     text-align: center;
     display: grid;
-    grid-template-columns: 40% 20% 15% 12.5% 12.5% ;
+    grid-template-columns: 50% 15% 15% 12.5% 7.5%;
     margin-bottom: 25px;
 }
+
 
 .table-title label:after {
     display: block;
@@ -249,8 +250,22 @@ h2 {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 }
 
+.row div {
+    display: table;
+}
+
+.row div p {
+    display: table-cell;
+    vertical-align: middle;
+}
+
 .row a{
+    display: table;
     color: var(--main-color);
+}
+
+.row a i{
+    display: table-cell;
     vertical-align: middle;
 }
 

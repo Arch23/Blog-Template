@@ -14,17 +14,18 @@ $(document).ready(function () {
 });
 
 function loadPost(data) {
+  var newDate = data.date.split("-").reverse().join("/");
   if (data.imgUrl === "Nothing") { // Not have an Main Image
     $("body").append([{
       title: data.title,
-      date: data.date,
+      date: newDate,
       author: data.User_name,
       text: data.text
     }].map(postLoadWithoutImg).join(''));
   } else { // Have a main Image
     $("body").append([{
       title: data.title,
-      date: data.date,
+      date: newDate,
       author: data.User_name,
       text: data.text,
       imgUrl: data.img_url,

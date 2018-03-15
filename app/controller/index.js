@@ -8,13 +8,14 @@ $(document).ready(function () {
 
 function loadPosts(data) {
   var num = 0;
+  var newDate;
   data.forEach(e => {
+    newDate = e.date.split("-").reverse().join("/");
     if (e.img_url === "Nothing") { // Not have a main image
-
       $("#post-list").append([{
         entry: "entry-" + num,
         title: e.title,
-        date: e.date,
+        date: newDate,
         author: e.User_name,
         text: e.text.substring(0, 300) + "..."
       }].map(entryWithoutImage).join(''));
@@ -24,7 +25,7 @@ function loadPosts(data) {
       $("#post-list").append([{
         entry: "entry-" + num,
         title: e.title,
-        date: e.date,
+        date: newDate,
         author: e.User_name,
         text: e.text.substring(0, 300) + "...",
         imgUrl: e.img_url,
@@ -50,7 +51,7 @@ function addEvent() {
 }
 
 function loadPost(title, date, author) {
-
+  date = date.split("/").reverse().join("-");
   var post = {
     title: title,
     date: date,

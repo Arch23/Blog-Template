@@ -3,11 +3,9 @@ $(document).ready(function () {
     checkPrivilege();
     setUpAjax();
     setUpModal();
-    getPostNumber();
 });
 
 var divToLoad = ".content";
-var postNumber = 0;
 
 function checkPrivilege() {
     if (Cookies.get("privilege") == 1) {
@@ -21,27 +19,13 @@ function setUpAjax() {
         link.addEventListener("click", function () {
             switch (this.id) {
                 case "create-user":
-                    $(divToLoad).fadeOut("fast", function () {
-                        $(divToLoad).load("./controlPanelPages/create_user.html", function () {
-                            $(divToLoad).fadeIn("fast");
-                        });
-                    });
+                    loadCreateUser();
                     break;
                 case "create-post":
-                    $(divToLoad).fadeOut("fast", function () {
-                        $(divToLoad).load("./controlPanelPages/create_post.html", function () {
-                            /* $("#text-area").trumbowyg(); */
-                            setFileUpdateEvent();
-                            $(divToLoad).fadeIn("fast");
-                        });
-                    });
+                    loadCreatePost();
                     break;
                 case "list-posts":
-                    $(divToLoad).fadeOut("fast", function () {
-                        $(divToLoad).load("./controlPanelPages/list_posts.html", function () {
-                            $(divToLoad).fadeIn("fast");
-                        });
-                    });
+                    listPosts();
                     break;
                 case "edit-users":
                     loadEditUsers();
@@ -61,6 +45,35 @@ function logoff() {
     window.location.href = "loginCP.html";
     // window.location.replace("loginCP.html");
 
+}
+
+function loadCreateUser() {
+    $(divToLoad).fadeOut("fast", function () {
+        $(divToLoad).load("./controlPanelPages/create_user.html", function () {
+            $(divToLoad).fadeIn("fast");
+        });
+    });
+}
+
+function loadCreatePost() {
+    $(divToLoad).fadeOut("fast", function () {
+        $(divToLoad).load("./controlPanelPages/create_post.html", function () {
+            /* $("#text-area").trumbowyg(); */
+            setFileUpdateEvent();
+            getPostNumber();
+            deleteUnusedImages();
+            $(divToLoad).fadeIn("fast");
+        });
+    });
+}
+
+function listPosts() {
+    $(divToLoad).fadeOut("fast", function () {
+        $(divToLoad).load("./controlPanelPages/list_posts.html", function () {
+            getPosts();
+            $(divToLoad).fadeIn("fast");
+        });
+    });
 }
 
 function loadEditUsers() {
@@ -143,6 +156,7 @@ function setFileUpdateEvent() {
         }
 
         fileName.textContent = nameOnly;
+        //postMainImage();
     });
 
     loadTextEditor();
@@ -218,37 +232,34 @@ function getUsers() {
     });
 }
 
-function postMainImage() {
-    var url = "../controller/uploadController.php";
-    var form = $('#post-editor')[0];
+function sendPost() {
+    /* ImageMain */
+    const form = $('#post-editor')[0];
     var formData = new FormData(form);
-    formData.append("file", document.getElementById("image").files[0]);
-    $.ajax(url, {
+    const image = document.getElementById("image").files[0];
+    const blogTitle = $("#post-title").val();
+    const blogText = $("#text-area").trumbowyg("html");
+
+    formData.append("file", image);
+    formData.append("tag", "newPost");
+    formData.append("title", blogTitle);
+    formData.append("text", blogText);
+    formData.append("userName", Cookies.get("name"));
+    formData.append("userNick", Cookies.get("nick"));
+
+    $.ajax("../controller/controlPanelController.php", {
         method: 'post',
         processData: false,
         contentType: false,
         data: formData
     }).done(function (data) {
-        console.log(JSON.parse(data));
+        if (data === "saved") {
+            displayModal("Post created successfully!");
+            loadCreatePost();
+        }
     }).fail(function (data) {
         console.log(data);
     });
-}
-
-function createPost(imgUrl) {
-    const blogTitle = $("#post-title").val();
-    const blogText = $("#text-area").trumbowyg("html");
-    console.log(blogTitle);
-    console.log(blogText);
-
-    $.post("../controller/newPostController.php", {
-            title: blogTitle,
-            text: blogText,
-            mainImg: imgUrl
-        },
-        function (data) {
-
-        });
 }
 
 function getPostNumber() {
@@ -256,7 +267,91 @@ function getPostNumber() {
             tag: 'postNumber'
         },
         function (data) {
-            postNumber = data;
+            Cookies.set("numPosts", data);
+        });
+}
+
+function deleteUnusedImages() {
+    $.post("../controller/uploadController.php", {
+        controlTag: "deleteOlder"
+    });
+}
+
+function getPosts() {
+    console.log(Cookies.get("privilege"));
+    if (Cookies.get("privilege") === "1") {
+        getAllPosts();
+    } else {
+        getUserPosts(Cookies.get("nick"), Cookies.get("name"));
+    }
+}
+
+function getUserPosts(nick, name) {
+    $.post("../controller/controlPanelController.php", {
+            tag: "getUserPost",
+            userName: name,
+            userNick: nick
+        },
+        function (data) {
+            data = JSON.parse(data);
+            var newDate;
+            if (!!data.length) {
+                data.forEach(e => {
+                    newDate = e.date.split("-").reverse().join("/");
+                    $(divToLoad).append([{
+                        title: e.title,
+                        date: newDate,
+                        authorName: e.User_name,
+                        authorNick: e.User_nickname
+                    }].map(postEntry).join(''));
+                });
+            } else {
+                newDate = data.date.split("-").reverse().join("/");
+                $(divToLoad).append([{
+                    title: data.title,
+                    date: newDate,
+                    authorName: Cookies.get("name"),
+                    authorNick: Cookies.get("nick")
+                }].map(postEntry).join(''));
+            }
+            document.querySelectorAll(".post-delete").forEach(function(e){
+                e.addEventListener("click", function(){
+                    //TERMINAR
+                    /* $.post("../controller/controlPanelController.php", {
+                        tag: "deletePost"
+                    }) */;
+                })
+            });
+        });
+}
+
+function getAllPosts() {
+    console.log("?");
+    $.post("../controller/controlPanelController.php", {
+            tag: "getAllPost",
+        },
+        function (data) {
+            data = JSON.parse(data);
+            var newDate;
+            if (!!data.length) {
+                data.forEach(e => {
+                    newDate = e.date.split("-").reverse().join("/");
+                    $(divToLoad).append([{
+                        title: e.title,
+                        date: newDate,
+                        authorName: e.User_name,
+                        authorNick: e.User_nickname
+                    }].map(postEntry).join(''));
+                });
+            } else {
+                newDate = data.date.split("-").reverse().join("/");
+                $(divToLoad).append([{
+                    title: data.title,
+                    date: newDate,
+                    authorName: data.User_name,
+                    authorNick: data.User_nickname
+                }].map(postEntry).join(''));
+            }
         });
 }
 
@@ -272,4 +367,19 @@ const userEntry = ({
   <a class="user-delete" id="${name}-${username}">
       <i class="icon ion-close-circled"></i>
   </a>
+</div>`;
+
+const postEntry = ({
+    title,
+    authorName,
+    authorNick,
+    date
+}) => `<div class="list-content-grid row">
+<div class="title"><p>${title}</p></div>
+<div><p>${authorName}</p></div>
+<div><p>${authorNick}</p></div>
+<div><p>${date}</p></div>
+<a class="post-delete" href="#">
+    <i class="icon ion-close-circled"></i>
+</a>
 </div>`;
