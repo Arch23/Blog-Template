@@ -15,7 +15,7 @@ function deleteLoader() {
 */
 
 function isLoggedIn(){
-    if(typeof Cookies.get("name") == 'undefined' || typeof Cookies.get("nick") == 'undefined'){
+    if(!sessionStorage.getItem("loggedIn")){
         window.location.replace("loginCP.html");
     }
 }
