@@ -62,7 +62,6 @@ function loadCreatePost() {
             /* $("#text-area").trumbowyg(); */
             setFileUpdateEvent();
             getPostNumber();
-            deleteUnusedImages();
             $(divToLoad).fadeIn("fast");
         });
     });
@@ -269,6 +268,7 @@ function getPostNumber() {
         },
         function (data) {
             Cookies.set("numPosts", data);
+            deleteUnusedImages();
         });
 }
 

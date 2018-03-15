@@ -11,7 +11,7 @@ class Post {
 
   /* Main Functions */
   public function getAllPosts($db){
-    $stmt = $db->prepare("SELECT * FROM `Post`");
+    $stmt = $db->prepare("SELECT * FROM `Post` ORDER BY `Date` DESC");
 
     $stmt->execute();
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);  // PDO::FETCH_ASSOC "destroy" the first return "num => content"
@@ -49,7 +49,7 @@ class Post {
   }
 
   public function getUserPost($db) {
-    $stmt = $db->prepare("SELECT `title`, `date` FROM `Post` WHERE `User_nickname` = :nickname AND `User_name` = :name");
+    $stmt = $db->prepare("SELECT `title`, `date` FROM `Post` WHERE `User_nickname` = :nickname AND `User_name` = :name ORDER BY `Date` DESC");
 
     $stmt->bindParam(":nickname", $this->userNick);
     $stmt->bindParam(":name", $this->userName);

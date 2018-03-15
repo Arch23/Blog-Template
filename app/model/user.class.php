@@ -46,7 +46,7 @@ class User{
 
   public function getAllUsers($db,$nick){
     if($this->verifyPrivilege($db,$nick)){
-      $stmt = $db->prepare("SELECT `name`, `nickname` FROM `User` ");
+      $stmt = $db->prepare("SELECT `name`, `nickname` FROM `User` ORDER BY `name` ASC");
       $stmt->execute();
       $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
       return(json_encode($res));

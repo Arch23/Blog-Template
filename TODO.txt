@@ -1,6 +1,3 @@
-Criar post
-Listar post
-Editar/Deletar post
 
 session_login()
 
