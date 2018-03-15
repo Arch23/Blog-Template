@@ -10,6 +10,7 @@ function login(){
                 Cookies.set("name",data.name);
                 Cookies.set("nick",data.nick);
                 Cookies.set("privilege",data.privilege);
+                sessionStorage.setItem('loggedIn',true);
                 window.location.replace("controlPanel.html");
                 break;
             case "wrong":
